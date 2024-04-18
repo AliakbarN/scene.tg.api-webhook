@@ -1,0 +1,28 @@
+<?php
+
+use SceneApi\Services\WebhookConfigurator;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+
+if ($argc < 3) {
+    echo "You missed some arguments\n";
+    exit();
+}
+
+$token = $argv[1];
+$url = $argv[2];
+
+if (str_contains($token, 'http')) {
+    echo "Incorrect token, perhaps you swapped them out\n";
+    exit();
+}
+
+if (filter_var($url, FILTER_VALIDATE_URL) !== $url) {
+    echo "The second argument must be an url\n";
+    exit();
+}
+
+(new WebhookConfigurator($url, $token))->setWebhook();
+
+exit();

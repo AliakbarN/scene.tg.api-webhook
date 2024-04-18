@@ -3,7 +3,8 @@
     "description": "This is an auxiliary service designed to make it easier and more comfortable to work with the Telegram API (Nutgram).",
     "type": "library",
     "require": {
-        "nutgram/nutgram": "^4.2.0"
+        "nutgram/nutgram": "^4.2.0",
+        "illuminate/database": "^10.48"
     },
     "autoload": {
         "psr-4": {

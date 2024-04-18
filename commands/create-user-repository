@@ -1,0 +1,42 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use SceneApi\UserRepositoryConfig;
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$conf = UserRepositoryConfig::fromConfig();
+
+$capsule = new Capsule;
+
+$capsule->addConnection($conf->toArray());
+
+echo "Connected\n";
+
+$capsule->setAsGlobal();
+
+echo "Creating...\n";
+
+Capsule::schema()->create('bot_users', function (Blueprint $table) {
+    $table->id();
+    $table->timestamps();
+    $table->bigInteger('tg_id')->unique();
+    $table->text('scene');
+    $table->boolean('is_active')->default(true);
+    $table->boolean('is_enter')->default(true);
+});
+
+Capsule::schema()->create('bot_user_data', function (Blueprint $table) {
+    $table->id();
+    $table->timestamps();
+    $table->json('data')->default(json_encode([]));
+
+    $table->bigInteger('bot_user_id')->unsigned();
+
+    $table->foreign('bot_user_id')->references('id')->on('bot_users')->onDelete('CASCADE');
+});
+
+echo 'Tables were created successfully';
+
+exit();

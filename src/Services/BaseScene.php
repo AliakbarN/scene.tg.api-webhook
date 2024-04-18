@@ -4,7 +4,7 @@ namespace SceneApi\Services;
 
 use Exception;
 use SceneApi\SceneManager;
-use SceneApi\Services\Traits\SceneEntryHandlerRunner;
+use SceneApi\Traits\SceneEntryHandlerRunner;
 use SergiX44\Nutgram\Nutgram;
 
 abstract class BaseScene
@@ -68,8 +68,8 @@ abstract class BaseScene
      */
     public function next(Nutgram$bot, string $sceneName) :void
     {
-        $this->manager->next($bot, $bot->userId(), $sceneName);
-        $this->manager->changeUserState($bot->userId(), true);
+        $this->manager->next($bot, $sceneName);
+        $this->manager->changeUserState(true);
         $this->wasMiddlewaresRun = false;
     }
 

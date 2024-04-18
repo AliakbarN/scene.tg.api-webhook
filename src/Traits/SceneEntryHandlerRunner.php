@@ -1,6 +1,6 @@
 <?php
 
-namespace SceneApi\Services\Traits;
+namespace SceneApi\Traits;
 
 use Exception;
 use SergiX44\Nutgram\Nutgram;
@@ -15,7 +15,13 @@ trait SceneEntryHandlerRunner
 
     protected function enter(Nutgram $bot) :void
     {
-        $this->manager->addUser($bot->userId(), $this->name, false);
+        if ($this->manager->checkUserExists($bot->userId())) {
+            $this->manager->startByScene($bot);
+
+            return;
+        }
+
+        $this->manager->addUser($this->name, false);
 
         $this->onEnter($bot);
     }

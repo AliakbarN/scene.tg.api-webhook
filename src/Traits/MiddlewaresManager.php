@@ -1,6 +1,6 @@
 <?php
 
-namespace SceneApi\Services\Traits;
+namespace SceneApi\Traits;
 
 use Exception;
 use SceneApi\Services\BaseMiddleware;
@@ -26,7 +26,7 @@ trait MiddlewaresManager
         foreach ($middlewares as $middleware)
         {
             if (!is_a($middleware, BaseMiddleware::class, true)) {
-                $this->log('The class [' . $middleware .'] is not extended by BaseMiddleware');
+                $this->logger->error('The class [' . $middleware .'] is not extended by BaseMiddleware');
             }
         }
     }

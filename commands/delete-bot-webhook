@@ -1,0 +1,14 @@
+<?php
+
+use SceneApi\Services\WebhookConfigurator;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+if ($argc < 2) {
+    echo "You missed some arguments\n";
+    exit();
+}
+
+$token = $argv[1];
+
+(new WebhookConfigurator(token: $token))->deleteWebhook();
