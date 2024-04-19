@@ -1,1 +1,5 @@
 /vendor
+.idea/
+index.php
+scenes-logs.txt
+src/Scenes/

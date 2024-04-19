@@ -9,6 +9,8 @@ use SceneApi\Services\ODT\UserState;
 trait CanManageUsers
 {
 
+    use CanManageUserData;
+
     protected function retrieveUser(): void
     {
         $user = User::where(User::ID, $this->bot->userId())->first();
@@ -18,6 +20,8 @@ trait CanManageUsers
         }
 
         $this->user = UserState::fromModel($user);
+
+        $this->setUserData($user->userData);
     }
 
     protected function backupUser(): void
@@ -30,6 +34,8 @@ trait CanManageUsers
         $user->is_enter = $currentUser->isEnter;
 
         $user->save();
+
+        $user->userData()->update($this->getUserDataForUpdate());
     }
 
     protected function getUser(): UserState

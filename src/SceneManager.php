@@ -3,12 +3,12 @@
 namespace SceneApi;
 
 use Exception;
+use SceneApi\Enums\MiddlewareRunTypes;
 use SceneApi\Services\BaseScene;
 use SceneApi\Services\Helpers\GetOption;
 use SceneApi\Services\Helpers\GetScenes;
 use SceneApi\Services\Logger;
 use SceneApi\Services\ODT\UserState;
-use SceneApi\Traits\CanManageUserData;
 use SceneApi\Traits\CanManageUsers;
 use SceneApi\Traits\MiddlewaresManager;
 use SergiX44\Nutgram\Nutgram;
@@ -16,10 +16,10 @@ use SergiX44\Nutgram\Nutgram;
 class SceneManager
 {
 
-    use MiddlewaresManager, CanManageUsers, CanManageUserData;
+    use MiddlewaresManager, CanManageUsers;
 
 
-    protected GetOption $option;
+    protected Config $config;
 
     /**
      * @var array
@@ -41,26 +41,27 @@ class SceneManager
     public Logger $logger;
 
 
-    public function __construct(Nutgram $bot, ?array $scenes = null, array $options = null, ?string $logFile = null)
+    public function __construct(Nutgram $bot, Config $config, ?array $scenes = null)
     {
         $this->bot = $bot;
 
-        $this->option = new GetOption($options);
+        $this->config = $config;
 
-        $logFile = $logFile !== null ?: __DIR__ . '/../scenes-logs.txt';
+        $logFile = $this->config->getLogFile() !== null ?: __DIR__ . '/../scenes-logs.txt';
 
         $this->logger = new Logger($logFile);
 
         UserRepositoryConfig::configure();
 
         if ($scenes === null) {
-            if (count($this->scenes) === 0) {
-                if ($this->option->get('sceneNameSpace') & $this->option->get('scenesDirPath')) {
-                    $this->scenes = GetScenes::getSceneClasses($this->option->get('scenesDirPath'), $this->option->get('sceneNameSpace'));
-                }
+
+            if ($this->config->getScenes() !== null) {
+                $this->scenes = $this->config->getScenes();
+            } else if ($this->config->getSceneRootPath() !== null && $this->config->getSceneNamespace() !== null) {
+                $this->scenes = GetScenes::get($this->config->getSceneRootPath(), $this->config->getSceneNamespace());
             }
         } else {
-            $this->scenes = $scenes;
+            $this->scenes = [];
         }
     }
 
@@ -162,7 +163,11 @@ class SceneManager
             if (!$scene->wasMiddlewaresRun) {
                 $breakDownChain = $this->manageMiddlewares($bot, $this->initiateMiddlewares($scene->middlewares));
 
-                if ($this->option->get('runMiddlewaresOnce')) {
+//                if ($this->option->get('runMiddlewaresOnce')) {
+//                    $scene->wasMiddlewaresRun = true;
+//                }
+
+                if ($this->config->getMiddlewareRunType() === MiddlewareRunTypes::ONCE->value) {
                     $scene->wasMiddlewaresRun = true;
                 }
 
@@ -303,9 +308,7 @@ class SceneManager
     public function next(Nutgram $bot, string $sceneName): void
     {
         $this->changeUserScene($sceneName);
-//        $this->users[$userId]->sceneName = $sceneName;
         $this->changeUserSceneState(false);
-//        $this->users[$userId]->isEnter = false;
 
         $scene = $this->findSceneByName($sceneName);
 

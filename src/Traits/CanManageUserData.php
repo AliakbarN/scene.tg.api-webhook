@@ -2,6 +2,8 @@
 
 namespace SceneApi\Traits;
 
+use SceneApi\Models\UserData;
+
 trait CanManageUserData
 {
 
@@ -22,5 +24,17 @@ trait CanManageUserData
         }
 
         return $this->userData[$key];
+    }
+
+    protected function setUserData(UserData $userData): void
+    {
+        $this->userData = $userData->toArray();
+    }
+
+    protected function getUserDataForUpdate(): array
+    {
+        return [
+            'data' => json_encode($this->userData),
+        ];
     }
 }

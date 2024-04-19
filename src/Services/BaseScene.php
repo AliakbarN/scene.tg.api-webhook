@@ -25,9 +25,7 @@ abstract class BaseScene
      * @var array
      * Middlewares for only this class
      */
-    public array $middlewares = [
-
-    ];
+    public array $middlewares = [];
 
     public bool $wasMiddlewaresRun = false;
 
@@ -55,9 +53,9 @@ abstract class BaseScene
      * @return void
      * Break down Scene
      */
-    public function break(int $userId) :void
+    public function break() :void
     {
-        $this->manager->changeUserState($userId, false);
+        $this->manager->changeUserState(false);
         $this->wasMiddlewaresRun = false;
     }
 
@@ -105,13 +103,13 @@ abstract class BaseScene
 
     abstract public function onSuccess(Nutgram $bot) :void;
 
-    protected function setData(array $data, int $userId) :void
+    protected function setData(array $data) :void
     {
-        $this->manager->setData($data, $userId);
+        $this->manager->setData($data);
     }
 
-    protected function getData(string $key, int $userId) :mixed
+    protected function getData(string $key) :mixed
     {
-        return $this->manager->getData($key, $userId);
+        return $this->manager->getData($key);
     }
 }
