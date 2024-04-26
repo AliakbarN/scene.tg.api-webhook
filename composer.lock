@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ebbada681ec498249edac306c7090f8b",
+    "content-hash": "e986228e867f4b84928a6e06080d3f5f",
     "packages": [
         {
             "name": "brick/math",
@@ -553,7 +553,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v10.48.8",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -608,7 +608,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v10.48.8",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -654,7 +654,7 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v10.48.8",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
@@ -705,7 +705,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v10.48.8",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -753,16 +753,16 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v10.48.8",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "cf468c45729ec39f0ab03b3c97e65b0cc937b22b"
+                "reference": "f07e44e02163070fc02826ba132863a61e728de4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/cf468c45729ec39f0ab03b3c97e65b0cc937b22b",
-                "reference": "cf468c45729ec39f0ab03b3c97e65b0cc937b22b",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/f07e44e02163070fc02826ba132863a61e728de4",
+                "reference": "f07e44e02163070fc02826ba132863a61e728de4",
                 "shasum": ""
             },
             "require": {
@@ -822,11 +822,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-04-15T18:56:27+00:00"
+            "time": "2024-04-16T19:48:48+00:00"
         },
         {
             "name": "illuminate/macroable",
-            "version": "v10.39.0",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -872,7 +872,7 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v10.48.8",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
@@ -1110,16 +1110,16 @@
         },
         {
             "name": "nutgram/hydrator",
-            "version": "5.0.1",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nutgram/hydrator.git",
-                "reference": "687a6df34e8a5d5ed0b144792697a4f9745fad21"
+                "reference": "cdd8cb922952edc8d295a754f6d70227cfbd369e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nutgram/hydrator/zipball/687a6df34e8a5d5ed0b144792697a4f9745fad21",
-                "reference": "687a6df34e8a5d5ed0b144792697a4f9745fad21",
+                "url": "https://api.github.com/repos/nutgram/hydrator/zipball/cdd8cb922952edc8d295a754f6d70227cfbd369e",
+                "reference": "cdd8cb922952edc8d295a754f6d70227cfbd369e",
                 "shasum": ""
             },
             "require": {
@@ -1164,30 +1164,30 @@
             ],
             "support": {
                 "issues": "https://github.com/nutgram/hydrator/issues",
-                "source": "https://github.com/nutgram/hydrator/tree/5.0.1"
+                "source": "https://github.com/nutgram/hydrator/tree/6.0.0"
             },
-            "time": "2023-12-30T18:18:29+00:00"
+            "time": "2024-01-07T22:43:31+00:00"
         },
         {
             "name": "nutgram/nutgram",
-            "version": "4.14.1",
+            "version": "4.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nutgram/nutgram.git",
-                "reference": "8ac15ee7c8246b8af243eaade20bc01c9597e64d"
+                "reference": "3c7ce1af69c89e1737db2ff7ecbb173e2c651546"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nutgram/nutgram/zipball/8ac15ee7c8246b8af243eaade20bc01c9597e64d",
-                "reference": "8ac15ee7c8246b8af243eaade20bc01c9597e64d",
+                "url": "https://api.github.com/repos/nutgram/nutgram/zipball/3c7ce1af69c89e1737db2ff7ecbb173e2c651546",
+                "reference": "3c7ce1af69c89e1737db2ff7ecbb173e2c651546",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/guzzle": "^7.2",
-                "illuminate/macroable": "^8.0|^9.0|^10.0",
+                "illuminate/macroable": ">=9.0",
                 "laravel/serializable-closure": "^1.2",
-                "nutgram/hydrator": "^5.0.1",
+                "nutgram/hydrator": "^6.0",
                 "php": "^8.2",
                 "psr/log": "^1.0|^2.0|^3.0",
                 "psr/simple-cache": "^1.0|^2.0|^3.0",
@@ -1238,7 +1238,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nutgram/nutgram/issues",
-                "source": "https://github.com/nutgram/nutgram/tree/4.14.1"
+                "source": "https://github.com/nutgram/nutgram/tree/4.19.0"
             },
             "funding": [
                 {
@@ -1250,7 +1250,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-01-04T17:02:12+00:00"
+            "time": "2024-04-10T16:53:03+00:00"
         },
         {
             "name": "psr/clock",
