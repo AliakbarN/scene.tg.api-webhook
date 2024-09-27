@@ -3,6 +3,7 @@
 namespace SceneApi\Services;
 
 use SceneApi\SceneManagerException;
+use Exception;
 
 class Logger
 {
@@ -13,6 +14,7 @@ class Logger
         $this->logFile = $logFile;
         // Check if file exists, create it if not
         if (!file_exists($logFile)) {
+            error_log($logFile);
             touch($logFile);
         }
     }
@@ -22,11 +24,17 @@ class Logger
         $this->log('INFO', $message);
     }
 
-    public function error(string $message): void
+    public function error(string $message, Exception $e = null): void
     {
-        $this->log('ERROR', $message);
+        if ($e) {
+            // Log the exception details with a full stack trace
+            $this->log('ERROR', $message . "\n" . $this->formatException($e));
+        } else {
+            $this->log('ERROR', $message);
+        }
 
-        throw new SceneManagerException($message);
+        // Throw a custom exception
+//        throw new SceneManagerException($message, 0, $e);
     }
 
     private function log(string $type, string $message): void
@@ -41,5 +49,16 @@ class Logger
         echo $logMessage;
 
         return;
+    }
+
+    private function formatException(Exception $e): string
+    {
+        return sprintf(
+            "Exception: %s in %s:%d\nStack trace:\n%s",
+            $e->getMessage(),
+            $e->getFile(),
+            $e->getLine(),
+            $e->getTraceAsString()
+        );
     }
 }

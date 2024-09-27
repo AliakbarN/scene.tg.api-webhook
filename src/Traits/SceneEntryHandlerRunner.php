@@ -15,15 +15,17 @@ trait SceneEntryHandlerRunner
 
     protected function enter(Nutgram $bot) :void
     {
-        if ($this->manager->checkUserExists($bot->userId())) {
-            $this->manager->startByScene($bot);
-
-            return;
-        }
-
-        $this->manager->addUser($this->name, false);
-
-        $this->onEnter($bot);
+        error_log('ENTER');
+        $this->manager->startByScene($bot, $this->name);
+//        if ($this->manager->checkUserExists($bot->userId())) {
+//            $this->manager->startByScene($bot);
+//
+//            return;
+//        }
+//
+//        $this->manager->addUser($this->name, false);
+//
+//        $this->onEnter($bot);
     }
 
     protected function onCommand(string $command) :void

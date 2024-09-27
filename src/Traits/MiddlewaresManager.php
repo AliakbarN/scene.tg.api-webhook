@@ -12,35 +12,32 @@ trait MiddlewaresManager
     /**
      * @var BaseMiddleware[]
      */
-    protected array $initiatedMiddlewares = [
-
-    ];
+    protected array $initiatedMiddlewares = [];
 
     /**
      * @throws Exception
      */
-    protected function checkMiddlewares(BaseScene $scene) :void
+    protected function checkMiddlewares(BaseScene $scene) : void
     {
-        $middlewares = $scene->middlewares;
-
-        foreach ($middlewares as $middleware)
-        {
+        foreach ($scene->middlewares as $middleware) {
             if (!is_a($middleware, BaseMiddleware::class, true)) {
-                $this->logger->error('The class [' . $middleware .'] is not extended by BaseMiddleware');
+                $this->logger->error('The class [' . $middleware . '] is not extended by BaseMiddleware');
             }
         }
     }
 
     /**
+     * Initialize middlewares and cache them.
+     *
      * @return BaseMiddleware[]
      */
-    protected function initiateMiddlewares(array $middlewares) :array
+    protected function initiateMiddlewares(array $middlewares): array
     {
         $result = [];
-        foreach ($middlewares as $middleware)
-        {
+
+        foreach ($middlewares as $middleware) {
             if (!array_key_exists($middleware, $this->initiatedMiddlewares)) {
-                $this->initiatedMiddlewares[$middleware] = new ($middleware);
+                $this->initiatedMiddlewares[$middleware] = new $middleware;
             }
 
             $result[] = $this->initiatedMiddlewares[$middleware];
@@ -54,49 +51,40 @@ trait MiddlewaresManager
      * @param BaseMiddleware[] $middlewares
      * @return bool|null
      */
-    protected function manageMiddlewares(Nutgram $bot, array $middlewares) :bool|null
+    protected function manageMiddlewares(Nutgram $bot, array $middlewares): ?bool
     {
-        if (count($middlewares) === 0) {
+        if (empty($middlewares)) {
             return null;
         }
 
-        $bot->{"customData"} = [];
+        $bot->customData = [];
         $i = 0;
         $allData = [];
         $breakDownChain = false;
 
-        while ((count($middlewares) - 1) === $i)
-        {
+        while ($i < count($middlewares)) {
+            $currentMiddleware = $middlewares[$i];
             $x = $i;
-            $middleware = $middlewares[$i];
-            $middleware->handle($bot, function (array $data = null) use (&$i, &$allData)
-            {
-                $i++;
 
+            // Handle the middleware and pass a callback for further processing
+            $currentMiddleware->handle($bot, function (array $data = null) use (&$i, &$allData) {
+                $i++;
                 if ($data !== null) {
-                    foreach ($data as $key => $value)
-                    {
-                        $allData[$key] = $value;
-                    }
+                    $allData = array_merge($allData, $data);
                 }
             });
 
+            // If the chain has been broken, stop the loop
             if ($i === $x) {
                 $breakDownChain = true;
                 break;
             }
-
-            foreach ($allData as $key => $value)
-            {
-                $bot->customData[$key] = $value;
-            }
         }
 
-        $i = 0;
-        $allData = [];
-
-        usleep(500);
+        // Merge the collected data into the bot's custom data
+        $bot->customData = array_merge($bot->customData, $allData);
 
         return $breakDownChain;
     }
 }
+

@@ -76,7 +76,6 @@ trait CanManageUsers
     {
         $this->user = null;
 
-        /** @var User $user */
         $user = User::where(User::ID, $userId)->first();
 
         $user?->delete();
@@ -85,15 +84,21 @@ trait CanManageUsers
     public function changeUserState(bool $state): void
     {
         $this->user->isActive = $state;
+
+        $this->backupUser();
     }
 
     protected function changeUserSceneState(bool $state): void
     {
         $this->user->isEnter = $state;
+
+        $this->backupUser();
     }
 
     protected function changeUserScene(string $scene): void
     {
         $this->user->sceneName = $scene;
+
+        $this->backupUser();
     }
 }

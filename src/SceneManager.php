@@ -47,7 +47,7 @@ class SceneManager
 
         $this->config = $config;
 
-        $logFile = $this->config->getLogFile() !== null ?: __DIR__ . '/../scenes-logs.txt';
+        $logFile = $this->config->getLogFile() ?? __DIR__ . '/../logs.log';
 
         $this->logger = new Logger($logFile);
 
@@ -94,7 +94,6 @@ class SceneManager
      * @param Nutgram $bot
      * @param mixed $sceneClassName
      * @return void
-     * @throws SceneManagerException
      */
     public function start(Nutgram $bot, mixed $sceneClassName): void
     {
@@ -112,15 +111,34 @@ class SceneManager
      * Starts manager (scene chain) with a specific scene
      *
      * @param Nutgram $bot
+     * @param string|null $sceneName
      * @return void
+     * @throws SceneManagerException
      */
-    public function startByScene(Nutgram $bot): void
+    public function startByScene(Nutgram $bot, string $sceneName = null): void
     {
-        $this->retrieveUser();
+        error_log('START');
+        if (!$this->checkUserExists($bot->userId())) {
+            if ($sceneName === null) {
+                throw new SceneManagerException('Provide the scene name');
+            }
 
-        $scene = $this->findSceneByName($this->getUser()->sceneName);
+            $this->addUser($sceneName, false);
+        } else {
+            $this->retrieveUser();
+        }
 
-        $scene->onEnter($bot);
+        $sceneName = $sceneName ?? $this->getUser()->sceneName;
+
+        $scene = $this->findSceneByName($sceneName);
+
+        $middlewares = $this->initiateMiddlewares($scene->middlewares);
+        $breakDownChain = $this->manageMiddlewares($bot, $middlewares);
+
+        // If middleware chain was not broken, continue to onEnter
+        if (!$breakDownChain) {
+            $scene->onEnter($bot);
+        }
     }
 
     /**
@@ -151,6 +169,20 @@ class SceneManager
                 return;
             }
 
+            if (!$scene->wasMiddlewaresRun) {
+                if ($this->getUser()->isEnter) {
+                    $breakDownChain = $this->manageMiddlewares($bot, $this->initiateMiddlewares($scene->middlewares));
+
+                    if ($this->config->getMiddlewareRunType() === MiddlewareRunTypes::ONCE->value) {
+                        $scene->wasMiddlewaresRun = true;
+                    }
+
+                    if ($breakDownChain === true) {
+                        return;
+                    }
+                }
+            }
+
             if ($this->getUser()->isEnter) {
                 $scene->onEnter($bot);
                 $this->changeUserSceneState(false);
@@ -158,22 +190,6 @@ class SceneManager
                 $this->backupUser();
 
                 return;
-            }
-
-            if (!$scene->wasMiddlewaresRun) {
-                $breakDownChain = $this->manageMiddlewares($bot, $this->initiateMiddlewares($scene->middlewares));
-
-//                if ($this->option->get('runMiddlewaresOnce')) {
-//                    $scene->wasMiddlewaresRun = true;
-//                }
-
-                if ($this->config->getMiddlewareRunType() === MiddlewareRunTypes::ONCE->value) {
-                    $scene->wasMiddlewaresRun = true;
-                }
-
-                if ($breakDownChain === true) {
-                    return;
-                }
             }
 
             if (!$scene->isSuccess($bot)) {
@@ -223,20 +239,18 @@ class SceneManager
         return null;
     }
 
-
     /**
      * Validates scene classes
      *
      * @param bool $onlyOne
      * @param string|null $sceneName
      * @return bool
-     * @throws SceneManagerException
      */
     protected function checkClasses(bool $onlyOne = false, string $sceneName = null): bool
     {
         if ($onlyOne) {
             if ($sceneName === null) {
-                $this->logger->error('className argument missed in checkClass');
+                $this->logger->error('$sceneName argument missed in checkClass');
             } else {
                 if (!is_a($sceneName, BaseScene::class, true)) {
                     $this->logger->error('The class [' . $sceneName .'] is not extended by BaseScene');
@@ -280,6 +294,8 @@ class SceneManager
             }
         }
 
+        $this->logger->error('Something went wrong. The problem might be caused by incorrect scene name');
+
         return null;
     }
 
@@ -303,7 +319,6 @@ class SceneManager
      * @param Nutgram $bot
      * @param string $sceneName
      * @return void
-     * @throws SceneManagerException
      */
     public function next(Nutgram $bot, string $sceneName): void
     {
@@ -312,10 +327,12 @@ class SceneManager
 
         $scene = $this->findSceneByName($sceneName);
 
-        if ($scene === null) {
-            $this->logger->error('Something went wrong. The problem might be caused by incorrect scene name');
-        }
+        $middlewares = $this->initiateMiddlewares($scene->middlewares);
+        $breakDownChain = $this->manageMiddlewares($bot, $middlewares);
 
-        $scene->onEnter($bot);
+        // If middleware chain was not broken, continue to onEnter
+        if (!$breakDownChain) {
+            $scene->onEnter($bot);
+        }
     }
 }

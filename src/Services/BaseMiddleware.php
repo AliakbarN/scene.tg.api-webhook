@@ -11,5 +11,5 @@ abstract class BaseMiddleware
      * @param callable $next
      * @return void
      */
-    public function handle(Nutgram $bot, callable $next) :void {}
+    abstract public function handle(Nutgram $bot, callable $next): void;
 }
