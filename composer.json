@@ -4,7 +4,7 @@
     "type": "library",
     "require": {
         "nutgram/nutgram": "^4.2.0",
-        "illuminate/database": "^v10.48.0"
+        "illuminate/database": "*"
     },
     "autoload": {
         "psr-4": {
