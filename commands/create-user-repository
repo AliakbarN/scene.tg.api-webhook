@@ -18,24 +18,28 @@ $capsule->setAsGlobal();
 
 echo "Creating...\n";
 
-Capsule::schema()->create('bot_users', function (Blueprint $table) {
-    $table->id();
-    $table->timestamps();
-    $table->bigInteger('tg_id')->unique();
-    $table->text('scene');
-    $table->boolean('is_active')->default(true);
-    $table->boolean('is_enter')->default(true);
-});
+if (!Capsule::schema()->hasTable('bot_users')) {
+    Capsule::schema()->create('bot_users', function (Blueprint $table) {
+        $table->id();
+        $table->timestamps();
+        $table->bigInteger('tg_id')->unique();
+        $table->text('scene');
+        $table->boolean('is_active')->default(true);
+        $table->boolean('is_enter')->default(true);
+    });
+}
 
-Capsule::schema()->create('bot_user_data', function (Blueprint $table) {
-    $table->id();
-    $table->timestamps();
-    $table->json('data')->default(json_encode([]));
+if (!Capsule::schema()->hasTable('bot_user_data')) {
+    Capsule::schema()->create('bot_user_data', function (Blueprint $table) {
+        $table->id();
+        $table->timestamps();
+        $table->json('data')->default(json_encode([]));
 
-    $table->bigInteger('bot_user_id')->unsigned();
+        $table->bigInteger('bot_user_id')->unsigned();
 
-    $table->foreign('bot_user_id')->references('id')->on('bot_users')->onDelete('CASCADE');
-});
+        $table->foreign('bot_user_id')->references('id')->on('bot_users')->onDelete('CASCADE');
+    });
+}
 
 echo 'Tables were created successfully';
 

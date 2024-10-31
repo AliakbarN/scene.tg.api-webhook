@@ -117,7 +117,6 @@ class SceneManager
      */
     public function startByScene(Nutgram $bot, string $sceneName = null): void
     {
-        error_log('START');
         if (!$this->checkUserExists($bot->userId())) {
             if ($sceneName === null) {
                 throw new SceneManagerException('Provide the scene name');
@@ -151,7 +150,6 @@ class SceneManager
         $this->bot->onMessage(function (Nutgram $bot)
         {
             $this->logger->info('Handle...');
-            error_log('Handle...');
 
             $this->retrieveUser();
 

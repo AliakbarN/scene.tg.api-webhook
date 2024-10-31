@@ -67,7 +67,7 @@ trait MiddlewaresManager
             $x = $i;
 
             // Handle the middleware and pass a callback for further processing
-            $currentMiddleware->handle($bot, function (array $data = null) use (&$i, &$allData) {
+            $currentMiddleware->handle($bot, $this, function (array $data = null) use (&$i, &$allData) {
                 $i++;
                 if ($data !== null) {
                     $allData = array_merge($allData, $data);

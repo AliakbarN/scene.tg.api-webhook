@@ -56,7 +56,7 @@ trait CanManageUsers
 
     protected function validateUser(): bool
     {
-        return $this->user->isActive;
+        return $this->getUser()->isActive;
     }
 
     public function addUser(string $sceneName, bool $isEnter) :void
